@@ -8,22 +8,27 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class ExampleResource {
 
-    private ExecutorService executor = Executors.newFixedThreadPool(10);
+    private final int POOL_SIZE = 2;
+    private final Semaphore syncPool = new Semaphore(POOL_SIZE, true);
+    private final ExecutorService asyncPool = Executors.newFixedThreadPool(POOL_SIZE);
 
     @GET @Path("sync")
     public String sync() throws InterruptedException {
+        syncPool.acquire();
         expensiveOperation();
+        syncPool.release();
         return "sync";
     }
 
     @GET @Path("async")
     public void async(@Suspended final AsyncResponse asyncResponse) {
-        executor.submit(() -> {
+        asyncPool.submit(() -> {
             expensiveOperation();
             asyncResponse.resume("async");
         });
