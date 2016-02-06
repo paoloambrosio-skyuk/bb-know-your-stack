@@ -1,14 +1,9 @@
 server:
-  type: simple
-  connector:
-    type: http
-    port: 8080
+  applicationConnectors:
+    - type: http
+      port: 8080
 
 logging:
   level: INFO
   appenders:
     - type: console
-
-#metrics:
-#  type: graphite
-#  frequency: 10s

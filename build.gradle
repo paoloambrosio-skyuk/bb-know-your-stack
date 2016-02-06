@@ -8,6 +8,8 @@ repositories {
     mavenCentral()
 }
 
+sourceCompatibility = 1.8
+
 project.ext {
     dropwizardVersion = '0.9.2'
 }
