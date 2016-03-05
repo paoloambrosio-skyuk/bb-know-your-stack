@@ -1,7 +1,10 @@
 server:
   applicationConnectors:
     - type: http
-      port: 8080
+      port: 8000
+  adminConnectors:
+    - type: http
+      port: 9000
 
 logging:
   level: INFO

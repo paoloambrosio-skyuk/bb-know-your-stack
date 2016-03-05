@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+sourceCompatibility = 1.8
+
+dependencies {
+    compile 'io.dropwizard:dropwizard-core:0.9.2'
+
+    compile 'org.apache.httpcomponents:fluent-hc:4.5.2'
+
+    compile 'com.ning:async-http-client:1.9.33'
+    runtime 'io.netty:netty-all:4.0.34.Final'
+}
+
+mainClassName = 'com.example.ExampleApplication'
+
+run {
+    args 'server', 'application.yml'
+}
