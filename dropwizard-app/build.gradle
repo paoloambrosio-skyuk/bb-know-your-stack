@@ -20,3 +20,10 @@ mainClassName = 'com.example.ExampleApplication'
 run {
     args 'server', 'application.yml'
 }
+
+shadowJar {
+    mergeServiceFiles {
+        exclude 'META-INF/*.DSA'
+        exclude 'META-INF/*.RSA'
+    }
+}
