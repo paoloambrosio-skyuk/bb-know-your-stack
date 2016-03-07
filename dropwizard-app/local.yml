@@ -7,6 +7,6 @@ server:
       port: 9000
 
 logging:
-  level: INFO
+  level: DEBUG
   appenders:
     - type: console

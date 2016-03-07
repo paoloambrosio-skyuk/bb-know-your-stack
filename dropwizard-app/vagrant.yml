@@ -1,0 +1,26 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 8000
+  adminConnectors:
+    - type: http
+      port: 9000
+
+logging:
+  level: INFO
+  appenders:
+    - type: file
+      currentLogFilename: /tmp/dropwizard-app.log
+      threshold: ALL
+      archive: false
+      timeZone: UTC
+
+metrics:
+  reporters:
+    - type: graphite
+      host: localhost
+      port: 2003
+      prefix: dropwizard-app
+      durationUnit: milliseconds
+      rateUnit: seconds
+      frequency: 1 second

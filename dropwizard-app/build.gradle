@@ -8,6 +8,8 @@ sourceCompatibility = 1.8
 
 dependencies {
     compile 'io.dropwizard:dropwizard-core:0.9.2'
+    runtime 'io.dropwizard:dropwizard-metrics-graphite:0.9.2'
+    runtime 'io.dropwizard.metrics:metrics-graphite:3.1.2'
 
     compile 'org.apache.httpcomponents:fluent-hc:4.5.2'
 
@@ -18,7 +20,7 @@ dependencies {
 mainClassName = 'com.example.ExampleApplication'
 
 run {
-    args 'server', 'application.yml'
+    args 'server', 'local.yml'
 }
 
 shadowJar {
