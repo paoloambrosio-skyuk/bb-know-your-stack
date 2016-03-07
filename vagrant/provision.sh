@@ -23,6 +23,15 @@ echo no | sudo -u _graphite graphite-manage syncdb
 ln -s /usr/share/graphite-web/apache2-graphite.conf /etc/apache2/sites-available/graphite-web.conf
 a2dissite *
 a2ensite graphite-web
+
+echo 'Listen 8001
+<VirtualHost *:8001>
+DocumentRoot /var/www/dependency
+</VirtualHost>' >/etc/apache2/sites-available/dependency.conf
+mkdir /var/www/dependency
+echo -n OK >/var/www/dependency/call
+a2ensite dependency
+
 service apache2 reload
 
 wget -nv -P /tmp https://grafanarel.s3.amazonaws.com/builds/grafana_2.6.0_amd64.deb

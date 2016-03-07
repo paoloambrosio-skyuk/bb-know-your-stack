@@ -20,7 +20,7 @@ dependencies {
 mainClassName = 'com.example.ExampleApplication'
 
 run {
-    args 'server', 'local.yml'
+    args 'server', 'vagrant.yml'
 }
 
 shadowJar {

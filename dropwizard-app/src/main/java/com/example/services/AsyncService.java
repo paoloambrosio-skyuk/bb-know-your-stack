@@ -13,10 +13,15 @@ public class AsyncService {
 
     public CompletableFuture<String> call() {
         final CompletableFuture<String> toBeCompleted = new CompletableFuture<>();
-        asyncHttpClient.prepareGet("http://localhost:8001/").execute(new AsyncCompletionHandler<Response>() {
+        asyncHttpClient.prepareGet("http://localhost:8001/call").execute(new AsyncCompletionHandler<Response>() {
             @Override
             public Response onCompleted(Response response) throws Exception {
-                toBeCompleted.complete("async");
+                String body = response.getResponseBody();
+                if ("OK".equals(body)) {
+                    toBeCompleted.complete("async");
+                } else {
+                    toBeCompleted.completeExceptionally(new RuntimeException("Something went wrong!"));
+                }
                 return response;
             }
             @Override
