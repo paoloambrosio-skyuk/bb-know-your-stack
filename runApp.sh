@@ -1,0 +1,1 @@
+./gradlew dropwizard-app:run

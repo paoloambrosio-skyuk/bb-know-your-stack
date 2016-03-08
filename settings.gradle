@@ -1,1 +1,2 @@
 include 'dropwizard-app'
+include 'load-test'

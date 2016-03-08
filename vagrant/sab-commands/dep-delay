@@ -1,0 +1,6 @@
+#!/bin/sh
+
+DELAY=$1
+
+sab reset
+sab add -n delay -p 8001 -d IN -F DELAY -l $DELAY

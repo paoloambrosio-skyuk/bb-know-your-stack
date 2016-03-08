@@ -1,5 +1,11 @@
 allprojects {
+  buildscript {
     repositories {
-        mavenCentral()
+      mavenCentral()
     }
+  }
+
+  repositories {
+    mavenCentral()
+  }
 }
