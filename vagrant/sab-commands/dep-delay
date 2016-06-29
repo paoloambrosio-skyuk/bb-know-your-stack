@@ -1,6 +1,18 @@
 #!/bin/sh
 
+if [ "$#" -ne 1 ]; then
+    echo "usage: $(basename $0) delay"
+    echo ""
+    echo "  delay :  dependency delay in milliseconds"
+    exit 1
+fi
+
 DELAY=$1
 
 sab reset
-sab add -n delay -p 8001 -d IN -F DELAY -l $DELAY
+if [ "$DELAY" -gt 0 ]; then
+  sab add -n delay -p 8001 -d IN -F DELAY -l $DELAY
+  echo "Dependency has been dalyed by ${DELAY}ms"
+else
+  echo "Delay in dependency has been removed"
+fi

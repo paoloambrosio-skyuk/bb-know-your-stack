@@ -1,12 +1,14 @@
 #!/bin/sh
 
-# 2003 graphite carbon
-# 3000 grafana
-# 8000 dropwizard-app
-# 8888 graphite-api
-# 9000 gropwizard-app admin
+set -e
+
+# 2003 Graphite Carbon
+# 3000 Grafana
+# 8001 Fake dependency (slowed down by Saboteur)
 
 export DEBIAN_FRONTEND=noninteractive
+
+apt-get update
 
 dpkg -s saboteur >/dev/null 2>&1 || {
     echo Installing Saboteur
@@ -33,10 +35,14 @@ dpkg -s graphite-web >/dev/null 2>&1 || {
 
 dpkg -s grafana >/dev/null 2>&1 || {
     echo Installing Grafana
-    wget -nv -P /tmp https://grafanarel.s3.amazonaws.com/builds/grafana_2.6.0_amd64.deb
+    wget -nv -P /tmp https://grafanarel.s3.amazonaws.com/builds/grafana_3.0.4-1464167696_amd64.deb
     apt-get install -y adduser libfontconfig
-    dpkg -i /tmp/grafana_2.6.0_amd64.deb
+    dpkg -i /tmp/grafana_3.0.4-1464167696_amd64.deb
     update-rc.d grafana-server defaults 95 10
+
+    cp /vagrant/dashboard.json /usr/share/grafana/public/dashboards/home.json
+    cp /vagrant/grafana.ini /etc/grafana/grafana.ini
+
     service grafana-server start
     until $(curl -o /dev/null -s 'http://admin:admin@localhost:3000/api/datasources/')
     do

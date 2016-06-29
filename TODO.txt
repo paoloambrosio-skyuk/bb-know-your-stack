@@ -1,2 +1,0 @@
-[ ] Write Grafana dashboards
-[ ] Write Saboteur scripts for Vagrant box
