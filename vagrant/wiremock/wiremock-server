@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+CMD='java -jar /opt/wiremock/wiremock-standalone-2.1.7.jar --port 8001 --root-dir /opt/wiremock'
+
+case "$1" in
+  start)
+    $CMD &
+    ;;
+  stop)
+    pkill -f "$CMD"
+    ;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 3
+    ;;
+esac

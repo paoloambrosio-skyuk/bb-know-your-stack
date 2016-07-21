@@ -6,16 +6,20 @@ _A short story of threads trapped in a job they never wanted_
 
 A virtual machine provides the following services:
 
-Service | External port
-------- | -------------
-Graphite | 2003
-Grafana | 3000
-Fake dependency (optionally slowed down with Saboteur) | 8001
-Saboteur |
+Service               | External port
+--------------------- | -------------
+Graphite              | 2003
+Grafana               | 3000
+Dependency (Wiremock) | 8001
 
 From the "vagrant" directory:
   - `vagrant up` starts or create the VM
-  - `vagrant ssh` opens a shell into the VM (e.g. to run Saboteur)
+  - `vagrant ssh` opens a shell into the VM
+
+Inside the Vagrant box:
+  - `wiremock-server start` Starts the dependency
+  - `wiremock-server stop` Stops the dependency
+  - `dep-delay DELAY` Delays the dependency by DELAY milliseconds
 
 ### Application under test
 
@@ -31,12 +35,12 @@ It exposes two endpoints on port 8000:
   - GET /async
 
 Both endpoints call the downstream dependency but use synchronous and
-asynchronous clients and controllers respectively. Outgoing connections
+asynchronous controllers and services respectively. Outgoing connections
 are currently not configured, so they use the default configuration.
 
 ### Performance tests
 
-Tests are started with:
+Simulations are started with:
   - `./runSyncSimulation.sh`
   - `./runAsyncSimulation.sh`
 

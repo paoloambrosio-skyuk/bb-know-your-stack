@@ -4,19 +4,11 @@ set -e
 
 # 2003 Graphite Carbon
 # 3000 Grafana
-# 8001 Fake dependency (slowed down by Saboteur)
+# 8001 Fake dependency with Wiremock
 
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
-
-dpkg -s saboteur >/dev/null 2>&1 || {
-    echo Installing Saboteur
-    wget -nv -P /tmp https://github.com/tomakehurst/saboteur/releases/download/v0.7/saboteur_0.7_all.deb
-    dpkg -i /tmp/saboteur_0.7_all.deb
-    update-rc.d saboteur-agent defaults 95 10
-    service saboteur-agent start
-}
 
 dpkg -s graphite-web >/dev/null 2>&1 || {
     echo Installing Graphite
@@ -53,17 +45,12 @@ dpkg -s grafana >/dev/null 2>&1 || {
     curl -s -H 'Content-Type: application/json' -X POST 'http://admin:admin@localhost:3000/api/datasources' --data-binary '{"name":"test","type":"graphite","url":"http://localhost","access":"proxy","basicAuth":false,"isDefault":true}'
 }
 
-test -d /var/www/dependency || {
-    echo Creating Dependency service
-    echo 'Listen 8001
-    <VirtualHost *:8001>
-    DocumentRoot /var/www/dependency
-    </VirtualHost>' >/etc/apache2/sites-available/dependency.conf
-    mkdir /var/www/dependency
-    echo -n OK >/var/www/dependency/call
-    a2ensite dependency
-    service apache2 reload
+test -d /opt/wiremock || {
+    echo Installing Wiremock Server
+    apt-get install -y openjdk-7-jre-headless
+    mkdir -p /opt/wiremock/mappings
+    wget -nv -P /opt/wiremock http://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.1.7/wiremock-standalone-2.1.7.jar
+    cp /vagrant/wiremock/wiremock-server /usr/local/bin/
+    cp /vagrant/wiremock/dep-delay /usr/local/bin/
+    cp /vagrant/wiremock/call.json /opt/wiremock/mappings
 }
-
-echo Copying sab commands
-cp /vagrant/sab-commands/* /usr/local/bin/

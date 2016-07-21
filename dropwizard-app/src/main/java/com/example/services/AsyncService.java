@@ -1,15 +1,20 @@
 package com.example.services;
 
+import com.example.ExampleConfiguration;
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
+import io.dropwizard.client.HttpClientConfiguration;
 
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncService {
 
-    // TODO: DI
-    private final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+    private final AsyncHttpClient asyncHttpClient;
+
+    public AsyncService(HttpClientConfiguration httpConfig) {
+        asyncHttpClient = new AsyncHttpClient();
+    }
 
     public CompletableFuture<String> call() {
         final CompletableFuture<String> toBeCompleted = new CompletableFuture<>();

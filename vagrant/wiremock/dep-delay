@@ -9,10 +9,9 @@ fi
 
 DELAY=$1
 
-sab reset
-if [ "$DELAY" -gt 0 ]; then
-  sab add -n delay -p 8001 -d IN -F DELAY -l $DELAY
+if [ "$DELAY" -ge 0 ]; then
+  curl -X POST --data "{\"fixedDelay\":${DELAY}}" http://localhost:8001/__admin/settings
   echo "Dependency has been dalyed by ${DELAY}ms"
 else
-  echo "Delay in dependency has been removed"
+  echo "Delay must be a positive value"
 fi

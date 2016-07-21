@@ -1,7 +1,9 @@
 package com.example.resources;
 
+import com.example.ExampleConfiguration;
 import com.example.services.AsyncService;
 import com.example.services.SyncService;
+import io.dropwizard.client.HttpClientConfiguration;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,8 +16,14 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.TEXT_PLAIN)
 public class ExampleResource {
 
-    private final SyncService syncService = new SyncService();
-    private final AsyncService asyncService = new AsyncService();
+    private final SyncService syncService;
+    private final AsyncService asyncService;
+
+    public ExampleResource(ExampleConfiguration configuration) {
+        HttpClientConfiguration httpConfig = configuration.getHttpClientConfiguration();
+        syncService = new SyncService(httpConfig);
+        asyncService = new AsyncService(httpConfig);
+    }
 
     @GET @Path("sync")
     public String sync() throws Exception {
