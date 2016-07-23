@@ -1,1 +1,2 @@
-./gradlew load-test:gatlingAsyncSimulation
+#!/usr/bin/env bash
+./gradlew load-test:gatling-AsyncSimulation

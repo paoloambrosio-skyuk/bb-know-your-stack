@@ -26,9 +26,16 @@ Inside the Vagrant box:
 The application under test is started with `./runApp.sh`
 
 It is configured in `local.yml` to have:
-  - acceptor threads: 1
-  - selector thread: 1
-  - worker threads: 4
+  - server
+    - acceptor threads: 1
+    - selector thread: 1
+    - worker threads: 4
+  - client
+    - connection request timeout: 100 ms
+    - connection timeout: 100 ms
+    - read timeout (socket inactivity): 2000 ms
+    - no retries
+    - connection pool size: 20
 
 It exposes two endpoints on port 8000:
   - GET /sync

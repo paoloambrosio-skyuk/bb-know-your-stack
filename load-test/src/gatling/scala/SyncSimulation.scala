@@ -3,7 +3,7 @@ import io.gatling.http.Predef._
 
 import scala.concurrent.duration._
 
-class AsyncSimulation extends Simulation {
+class SyncSimulation extends Simulation {
 
   val host = System.getProperty("undertest.host", "localhost")
   val port = System.getProperty("undertest.port", "8000")
@@ -11,17 +11,17 @@ class AsyncSimulation extends Simulation {
   val httpConf = http.baseURL(s"http://$host:$port")
 
   val scn = scenario("SyncSimulation")
-    .forever {exec(
-      http("OnlyRequest").get("/async").check(status.is(200))
-    )}
+    .forever {
+      exec(
+        http("OnlyRequest").get("/sync")
+          .check(status.is(200))
+      ).pace(1 second)
+    }
 
   setUp(
-    scn
-      .inject(atOnceUsers(4))
-      .throttle(
-        reachRps(16) in (5 seconds),
-        holdFor(60 seconds)
-      )
-  ).protocols(httpConf)
+    scn.inject(rampUsers(8) over (5 seconds))
+  )
+    .maxDuration(2 minutes)
+    .protocols(httpConf)
 
 }
