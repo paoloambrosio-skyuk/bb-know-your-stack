@@ -13,7 +13,8 @@ apt-get update
 dpkg -s graphite-web >/dev/null 2>&1 || {
     echo Installing Graphite
     apt-get install -y graphite-carbon graphite-web apache2 libapache2-mod-wsgi
-    cp /usr/share/doc/graphite-carbon/examples/storage-aggregation.conf.example /etc/carbon/storage-aggregation.conf
+    cp /vagrant/graphite/storage-aggregation.conf /etc/carbon/storage-aggregation.conf
+    cat /vagrant/graphite/storage-schemas-add.conf >>/etc/carbon/storage-schemas.conf
     echo 'CARBON_CACHE_ENABLED=true' >/etc/default/graphite-carbon
     graphite-build-search-index
     service carbon-cache start
@@ -27,13 +28,13 @@ dpkg -s graphite-web >/dev/null 2>&1 || {
 
 dpkg -s grafana >/dev/null 2>&1 || {
     echo Installing Grafana
-    wget -nv -P /tmp https://grafanarel.s3.amazonaws.com/builds/grafana_3.0.4-1464167696_amd64.deb
+    wget -nv -P /tmp https://grafanarel.s3.amazonaws.com/builds/grafana_3.1.0-1468321182_amd64.deb
     apt-get install -y adduser libfontconfig
-    dpkg -i /tmp/grafana_3.0.4-1464167696_amd64.deb
+    dpkg -i /tmp/grafana_3.1.0-1468321182_amd64.deb
     update-rc.d grafana-server defaults 95 10
 
-    cp /vagrant/dashboard.json /usr/share/grafana/public/dashboards/home.json
-    cp /vagrant/grafana.ini /etc/grafana/grafana.ini
+    cp /vagrant/grafana/dashboard.json /usr/share/grafana/public/dashboards/home.json
+    cp /vagrant/grafana/grafana.ini /etc/grafana/grafana.ini
 
     service grafana-server start
     until $(curl -o /dev/null -s 'http://admin:admin@localhost:3000/api/datasources/')

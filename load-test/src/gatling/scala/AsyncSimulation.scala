@@ -21,7 +21,7 @@ class AsyncSimulation extends Simulation {
   setUp(
     scn.inject(rampUsers(8) over (5 seconds))
   )
-    .maxDuration(2 minutes)
+    .maxDuration(140 seconds)
     .protocols(httpConf)
 
 }
