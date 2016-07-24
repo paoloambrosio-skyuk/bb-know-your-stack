@@ -1,6 +1,7 @@
 package com.example.resources;
 
-import com.example.ExampleConfiguration;
+import com.example.config.ExampleConfiguration;
+import com.example.config.HttpDependencyConfiguration;
 import com.example.services.AsyncService;
 import com.example.services.SyncService;
 import io.dropwizard.client.HttpClientConfiguration;
@@ -20,7 +21,7 @@ public class ExampleResource {
     private final AsyncService asyncService;
 
     public ExampleResource(ExampleConfiguration configuration) {
-        HttpClientConfiguration httpConfig = configuration.getHttpClientConfiguration();
+        HttpDependencyConfiguration httpConfig = configuration.getHttpDependencyConfiguration();
         syncService = new SyncService(httpConfig);
         asyncService = new AsyncService(httpConfig);
     }

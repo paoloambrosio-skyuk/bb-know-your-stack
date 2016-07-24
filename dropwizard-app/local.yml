@@ -29,7 +29,8 @@ metrics:
       rateUnit: seconds
       frequency: 1 second
 
-httpClient:
+httpDependency:
+  url: http://localhost:8001/call
   connectionRequestTimeout: 100ms
   connectionTimeout: 100ms
   timeout: 2000ms

@@ -51,8 +51,8 @@ Simulations are started with:
   - `./runSyncSimulation.sh`
   - `./runAsyncSimulation.sh`
 
-Settings are:
-  - connection timeout: 1000 ms
-  - request timeout: 1000 ms
-  - read timeout: 5000 ms
+Settings in `gatling.conf` are:
+  - connection timeout: 100 ms
+  - request timeout: 3000 ms
+  - read timeout: 3000 ms
   - no retries

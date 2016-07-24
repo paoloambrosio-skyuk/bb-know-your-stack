@@ -1,6 +1,6 @@
 package com.example.services;
 
-import io.dropwizard.client.HttpClientConfiguration;
+import com.example.config.HttpDependencyConfiguration;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
@@ -15,12 +15,21 @@ import java.io.IOException;
 public class SyncService {
 
     private final Executor executor;
+    private final HttpDependencyConfiguration config;
 
-    public SyncService(HttpClientConfiguration httpConfig) {
-        // Configuring the HTTP client without Dropwizard's HttpClientBuilder
+    public SyncService(HttpDependencyConfiguration config) {
+        this.config = config;
+        this.executor = createExecutor(config);
+    }
+
+    /**
+     * Configuring the HTTP client without Dropwizard's HttpClientBuilder
+     */
+    private Executor createExecutor(HttpDependencyConfiguration config) {
+        // Connection pooling
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-        cm.setMaxTotal(httpConfig.getMaxConnections());
-        cm.setDefaultMaxPerRoute(httpConfig.getMaxConnectionsPerRoute());
+        cm.setMaxTotal(config.getMaxConnections());
+        cm.setDefaultMaxPerRoute(config.getMaxConnectionsPerRoute());
 
         CloseableHttpClient httpClient = HttpClientBuilder.create()
                 .setConnectionManager(cm)
@@ -33,20 +42,20 @@ public class SyncService {
                         .build()
                 ).setDefaultRequestConfig(RequestConfig.custom()
                         // to get a connection from connection manager
-                        .setConnectionRequestTimeout((int)httpConfig.getConnectionRequestTimeout().toMilliseconds())
+                        .setConnectionRequestTimeout((int)config.getConnectionRequestTimeout().toMilliseconds())
                         // to establish the TCP connection
-                        .setConnectTimeout((int)httpConfig.getConnectionTimeout().toMilliseconds())
+                        .setConnectTimeout((int)config.getConnectionTimeout().toMilliseconds())
                         // max inactivity between data packets
-                        .setSocketTimeout((int)httpConfig.getTimeout().toMilliseconds())
+                        .setSocketTimeout((int)config.getTimeout().toMilliseconds())
                         .build()
                 )
-                .setRetryHandler(new StandardHttpRequestRetryHandler(httpConfig.getRetries(), false))
+                .setRetryHandler(new StandardHttpRequestRetryHandler(config.getRetries(), false))
                 .build();
-        executor = Executor.newInstance(httpClient);
+        return Executor.newInstance(httpClient);
     }
 
     public String call() throws IOException {
-        String body = executor.execute(Request.Get("http://localhost:8001/call")).returnContent().asString();
+        String body = executor.execute(Request.Get(config.getUrl())).returnContent().asString();
         if ("OK".equals(body)) {
             return "sync";
         } else {

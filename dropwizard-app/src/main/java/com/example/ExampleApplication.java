@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.config.ExampleConfiguration;
 import com.example.resources.ExampleResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
